@@ -2,8 +2,9 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
-    private int mTrials;
-    private double[] openCountArray; 
+    private final int mTrials;
+    private final double[] openCountArray; 
+    private static final float CONFIDENCE_96 = 1.96f; 
     
     // perform trials independent experiments on an n-by-n grid
     public PercolationStats(int n, int trials) {
@@ -24,7 +25,7 @@ public class PercolationStats {
                 if (!per.isOpen(randomRow, randomCol)) {
                     per.open(randomRow, randomCol);
                     if (per.percolates()) {
-                        openCountArray[i] = per.numberOfOpenSites() / (n * n);
+                        openCountArray[i] = (double) per.numberOfOpenSites() / (n * n);
                         break;
                     }
                 }
@@ -43,12 +44,12 @@ public class PercolationStats {
     
     // low  endpoint of 95% confidence interval
     public double confidenceLo() {
-        return (mean() - ((1.96 * stddev()) / Math.sqrt(mTrials)));
+        return (mean() - ((CONFIDENCE_96 * stddev()) / Math.sqrt(mTrials)));
     }
     
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return (mean() + ((1.96 * stddev()) / Math.sqrt(mTrials)));
+        return (mean() + ((CONFIDENCE_96 * stddev()) / Math.sqrt(mTrials)));
     }
     
     // test client (described below)

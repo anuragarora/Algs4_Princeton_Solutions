@@ -1,12 +1,12 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private int mSize;
+    private final int mSize;
     private boolean[][] mGrid;
-    private int mTop;
-    private int mBottom;
+    private final int mTop;
+    private final int mBottom;
     private int mNumberOfOpenSites;
-    private WeightedQuickUnionUF mWQUF;
+    private final WeightedQuickUnionUF mWQUF;
     
     public Percolation(int n) {
         if (n < 1) {
@@ -40,6 +40,9 @@ public class Percolation {
     
     // open site (row, col) if it is not open already
     public void open(int row, int col) {
+        if (row > mSize || col > mSize || row <= 0 || col <= 0) {
+            throw new IllegalArgumentException("address out of grid");
+        }
         mGrid[row - 1][col - 1] = true;
         
         // If given row is the first row, union the source and the block
@@ -78,12 +81,19 @@ public class Percolation {
     
     // is site (row, col) open?
     public boolean isOpen(int row, int col) {
+        if (row > mSize || col > mSize || row <= 0 || col <= 0) {
+            throw new IllegalArgumentException("address out of grid");
+        }
         return mGrid[row - 1][col - 1];
     }
     
     // is site (row, col) full? Full means percolation is possible from 
     // top to this block
     public boolean isFull(int row, int col) {
+        if (row > mSize || col > mSize || row <= 0 || col <= 0) {
+            throw new IllegalArgumentException("address out of grid");
+        }
+        
         // A site is a full site if it can be connected from the mTop (source)
         if (mWQUF.connected(mTop, getIndex(row, col))) {
             return true;
@@ -92,8 +102,8 @@ public class Percolation {
     }
     
     // Keeps track of number of open sites
-    public double numberOfOpenSites() {
-        return (double)mNumberOfOpenSites;
+    public int numberOfOpenSites() {
+        return mNumberOfOpenSites;
     }
     
     // does the system percolate?
@@ -103,10 +113,5 @@ public class Percolation {
             return true;
         }
         return false;
-    }
-
-    // test client (optional)
-    public static void main(String[] args) {
-       
     }
 }
