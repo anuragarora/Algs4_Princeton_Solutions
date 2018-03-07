@@ -49,16 +49,16 @@ public class Merge {
                 a[k] = aux[i++];
             }
             // If the element of the first subArray is less than the item of the second SubArray
-            else if (less(aux[i], aux[j])) {
-                a[k] = aux[i++];
+            else if (less(aux[j], aux[i])) {
+                a[k] = aux[j++];
             }
             // If the element of the second subArray is less than the item of the first SubArray
             else {
-                a[k] = aux[j++];
+                a[k] = aux[i++];
             }
         }
         
-        // Assert that the final merged subArray is sorted
+        // Assert that the final merged array is sorted
         assert isSorted(a, low, high);
     }
     
