@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+import java.util.Arrays;
 
 public class FastCollinearPoints {
     private Deque<LineSegment> mLineSegments;
@@ -11,21 +12,53 @@ public class FastCollinearPoints {
         if (points == null) {
             throw new IllegalArgumentException("Points array cannot be null");
         }
-        
-        // Sorting all the points
-        Merge.sort(points);
 
-        // Check collinearity via checking slopes of adjacent points
-        for (int i = 0; i < (points.length-3); i++) {
-            if (points[i].slopeTo(points[i + 1]) == points[i].slopeTo(points[i + 2])
-                    && points[i].slopeTo(points[i + 1]) == points[i].slopeTo(points[i + 3])) {
-                // How to make sure the same line segment is not getting entered twice
-                System.out.println("Adding segment from point" + points[i] + "to" + points[i + 3] + "\n");
-                
-                mLineSegments.addLast(new LineSegment(points[i], points[i + 3]));
-                i = i + 3;
+        // Sorting the array
+        Point[] sorted = Arrays.copyOf(points, points.length);
+        Arrays.sort(sorted);
+        
+        int i = 0;
+        while (i < points.length) {
+            // Origin point
+            //Point origin = points[i];
+            Arrays.sort(sorted, points[i].slopeOrder());
+            
+            int j = 1;
+            double slopeToMatch = points[i].slopeTo(sorted[j]);
+            while (j < sorted.length && points[i].slopeTo(sorted[j]) == slopeToMatch) {
+                j++;
             }
+            
+            if ((j - i) >= 4) {
+                System.out.println("Adding segment from point" + points[i] + "to" + points[j-1] + "\n");
+                mLineSegments.addLast(new LineSegment(points[i], points[j-1]));
+                i = j;
+            }
+            i++;
         }
+        // Check collinearity via checking slopes of adjacent points
+        /*int i = 0;
+        while (i < points.length) {
+            // Origin point
+            Point origin = points[i];
+            
+            // Creating a new array which
+            //Point[] sorted = Arrays.copyOf(points, points.length);
+            //Arrays.sort(sorted, origin.slopeOrder());
+            
+            int j = 1;
+            double slopeToMatch = origin.slopeTo(sorted[j]);
+            while (j < sorted.length && origin.slopeTo(sorted[j]) == slopeToMatch) {
+                j++;
+            }
+            
+            if ((j - i) >= 4) {
+                System.out.println("Adding segment from point" + origin + "to" + points[j-1] + "\n");
+                mLineSegments.addLast(new LineSegment(points[i], points[j-1]));
+            }
+            
+            i++;
+        }*/
     }
     
     // The number of line segments

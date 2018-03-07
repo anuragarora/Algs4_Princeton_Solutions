@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+import java.util.Arrays;
 
 public class BruteCollinearPoints {
     private Deque<LineSegment> mSegments;
@@ -12,22 +13,15 @@ public class BruteCollinearPoints {
             throw new IllegalArgumentException("points array cannot be null");
         }
         
-        for (int i = 0; i < points.length; i++) {
-            if (points[i] == null) {
-                throw new IllegalArgumentException("point cannot be null");
-            }
-            for (int j = i + 1; j < points.length; j++) {
-                if (points[j] == null || points[i].compareTo(points[j]) == 0) {
-                    throw new IllegalArgumentException();
-                }
-                for (int k = j + 1; k < points.length; k++) {
-                    if (points[k] == null || points[j].compareTo(points[k]) == 0) {
-                        throw new IllegalArgumentException();
-                    }
+        checkForDuplicatePoints(points);
+        
+        // Using natural sort provided by Point's compareTo method
+        Arrays.sort(points);
+        
+        for (int i = 0; i < points.length - 3; i++) {
+            for (int j = i + 1; j < points.length - 2; j++) {
+                for (int k = j + 1; k < points.length - 1; k++) {
                     for (int l = k + 1; l < points.length; l++) {
-                        if (points[l] == null || points[k].compareTo(points[l]) == 0) {
-                            throw new IllegalArgumentException();
-                        }
                         if (points[i].slopeTo(points[j]) == points[i].slopeTo(points[k])
                             && points[i].slopeTo(points[j]) == points[i].slopeTo(points[l])) {
                             // *** How to check if point already exists in line segment *** //
@@ -53,6 +47,18 @@ public class BruteCollinearPoints {
             lineSegment[index] = mSegments.removeFirst();
         }
         return lineSegment;
+    }
+    
+    // Remove duplicate points
+    public void checkForDuplicatePoints(Point[] points) {
+        for(int i = 0; i < points.length; i++) {
+            for (int j = 0; j < points.length; j++) {
+                if ((i != j && points[i].compareTo(points[j]) == 0) || 
+                    points[i] == null || points[j] == null) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
     }
     
     public static void main(String[] args) {

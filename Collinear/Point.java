@@ -53,13 +53,13 @@ public class Point implements Comparable<Point> {
             return 0;
         }
         else if ((that.x - this.x) == 0) {
-            return Double.MAX_VALUE;
+            return Double.POSITIVE_INFINITY;
         }
         else if (that.x == this.x && that.y == this.y) {
-            return Double.MIN_VALUE;
+            return Double.NEGATIVE_INFINITY;
         }
         else {
-            return (double) (that.y - this.y) / that.x - this.x;
+            return (double) (that.y - this.y) / (that.x - this.x);
         }
     }
 
@@ -76,22 +76,12 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
-        if (this.y < that.y) {
+        if (this.y == that.y && this.x == that.x) {
+            return 0;
+        } else if (this.y < that.y || (this.y == that.y && this.x < that.x)) {
             return -1;
-        }
-        else if (this.y > that.y) {
+        } else {
             return +1;
-        }
-        else {
-            if (this.x < that.x) {
-                return -1;
-            }
-            else if (this.x > that.x) {
-                return +1;
-            }
-            else {
-                return 0;
-            }
         }
     }
 
@@ -106,14 +96,14 @@ public class Point implements Comparable<Point> {
     }
     
     private class BySlopeOrder implements Comparator<Point> {
-        public int compare (Point x, Point y) {
-            if (slopeTo(x) < slopeTo(y)) {
+        public int compare (Point point1, Point point2) {
+            double slopeWithPoint1 = slopeTo(point1);
+            double slopeWithPoint2 = slopeTo(point2);
+            if (slopeWithPoint1 < slopeWithPoint2) {
                 return -1;
-            }
-            else if(slopeTo(x) > slopeTo(y)){
-                return +1;
-            }
-            else {
+            } else if (slopeWithPoint1 > slopeWithPoint2) {
+                return 1;
+            } else {
                 return 0;
             }
         }
